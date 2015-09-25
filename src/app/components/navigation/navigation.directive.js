@@ -5,8 +5,8 @@ class NavigationDirective {
     constructor() {
         'ngInject';
 
-        let postLink = (scope, el, attr, navigation) => {
-
+        let postLink = function(scope, el, attr, navigation, $timeout) {
+            // TODO
         };
 
         let directive = {
@@ -23,7 +23,7 @@ class NavigationDirective {
 }
 
 class NavigationController {
-    constructor($rootScope, $timeout, $scope, localStorageService) {
+    constructor($rootScope, $timeout, $scope, localStorageService, $log) {
         'ngInject';
 
         /**
@@ -38,6 +38,12 @@ class NavigationController {
             _version: 1,
             storage: {
                 settings: 'settings'
+            },
+            css: {
+                classes: {},
+                selectors: {
+                    stage: 'section.stage'
+                }
             }
         };
 
@@ -74,7 +80,7 @@ class NavigationController {
                         for(let i = 0; i <= this.settings.matrix.size.vertical; i++) {
                             let row = [];
 
-                            for(let i = 0; i<= this.settings.matrix.size.horizontal; i++) {
+                            for(let i = 0; i <= this.settings.matrix.size.horizontal; i++) {
                                 row.push(0);
                             }
 
@@ -87,11 +93,15 @@ class NavigationController {
             }
         ];
 
-        this.actions();
         this.registerWatchers(this.watchers);
 
-    };
+    }
 
+
+    /**
+     * Register the specify watcher collection.
+     * @param collection
+     */
     registerWatchers(collection) {
 
         if(!collection instanceof Array) {
@@ -99,39 +109,39 @@ class NavigationController {
         }
 
         collection.forEach(watcher => {
+                if(!watcher instanceof Object) {
+                    throw new Error('Watcher must be an Object.');
+                }
 
-            if(!watcher instanceof Object) {
-                throw new Error('Watcher must be an Object.');
-            }
+                if(!this.$scope[watcher.type]) {
+                    throw new Error('Uknown watcher: ' + watcher.type);
+                }
 
-            if(!this.$scope[watcher.type]) {
-                throw new Error('Uknown watcher: ' + watcher.type);
-            }
+                if(!watcher.model || typeof watcher.model !== 'string') {
+                    throw new TypeError('Model must be a string.');
+                }
 
-            if(!watcher.model || typeof watcher.model !== 'string') {
-                throw new TypeError('Model must be a string.');
-            }
+                if(!watcher.listener || !watcher.listener instanceof Function) {
+                    throw new TypeError('Listener must be a function.');
+                }
 
-            if(!watcher.listener || !watcher.listener instanceof Function) {
-                throw new TypeError('Listener must be a function.');
-            }
+                this.addWatcher(
+                    this.$scope[watcher.type](watcher.model, watcher.listener, true)
+                );
+        });
+    }
 
-            this.addWatcher(
-                this.$scope[watcher.type](watcher.model, watcher.listener, true)
-            );
-        })
-    };
-
-    addWatcher(watcher) {
+    /**
+     * Add single 'watcher' record.
+     * @param watcher
+     */
+    addWatcher(watcher)
+    {
         this._watchers = this._watchers || [];
         this._watchers.push(watcher);
-    };
+    }
 
-    actions() {
-        this.$rootScope.intValue = 123;
-    };
 
-;
 }
 
 export default NavigationDirective;

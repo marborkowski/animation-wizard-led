@@ -6,20 +6,5 @@ section.stage {
     border-color: $popover-border-color;
     border-style: solid;
     padding: $panel-body-padding;
-
-    button.pixel {
-      margin: 0;
-      padding: 0;
-      border: none;
-      width: 16px;
-      height: 16px;
-      background: grey;
-    }
-    div.cs-row {
-      margin:0;
-      padding:0;
-      line-height:0;
-    }
-
   }
 }
