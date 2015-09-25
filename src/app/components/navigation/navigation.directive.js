@@ -90,7 +90,7 @@ class NavigationController {
         this.actions();
         this.registerWatchers(this.watchers);
 
-    }
+    };
 
     registerWatchers(collection) {
 
@@ -120,18 +120,16 @@ class NavigationController {
                 this.$scope[watcher.type](watcher.model, watcher.listener, true)
             );
         })
-    }
-
-;
+    };
 
     addWatcher(watcher) {
         this._watchers = this._watchers || [];
         this._watchers.push(watcher);
-    }
+    };
 
     actions() {
         this.$rootScope.intValue = 123;
-    }
+    };
 
 ;
 }
