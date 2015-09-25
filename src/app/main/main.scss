@@ -1,0 +1,10 @@
+section.stage {
+  div.main {
+    @include border-top-radius($border-radius-base);
+    @include border-bottom-radius($border-radius-base);
+    border-width: 1px;
+    border-color: $popover-border-color;
+    border-style: solid;
+    padding: $panel-body-padding;
+  }
+}
