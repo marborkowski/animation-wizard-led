@@ -1,3 +1,10 @@
-.acme-navbar-text{
-  color: white;
+nav.main {
+  div.cs-matrix-size {
+    div.input-group {
+      max-width:110px;
+    }
+    > span:first-of-type {
+      margin-right:15px;
+    }
+  }
 }

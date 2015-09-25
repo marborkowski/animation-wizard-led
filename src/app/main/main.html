@@ -1,8 +1,10 @@
 <section class="stage">
-  {{intValue}}
-
   <div class="main">
-    abc
+    <div class="cs-row" ng-repeat="row in matrix">
+      <button class="pixel" ng-repeat="pixel in row track by $index" title="{{$index}}">
+
+      </button>
+    </div>
   </div>
 
   <div class="row">
@@ -18,3 +20,4 @@
     </div>
   </div>
 </section>
+{{intValue}}

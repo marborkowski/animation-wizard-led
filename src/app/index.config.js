@@ -1,7 +1,13 @@
-function config ($logProvider) {
+function config ($logProvider, localStorageServiceProvider) {
   'ngInject';
-  // Enable log
+
   $logProvider.debugEnabled(true);
+
+  /**
+   * LocalStorage service configuration
+   */
+  localStorageServiceProvider.setPrefix('animationWizardLed');
+  localStorageServiceProvider.setStorageType('localStorage');
 }
 
 export default config;
