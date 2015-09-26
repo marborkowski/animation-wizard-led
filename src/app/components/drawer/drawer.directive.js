@@ -84,9 +84,16 @@ class DrawerController {
         this.events = [
             {
                 selector: this.constants.css.selectors.canvas,
-                event: 'click',
+                event: 'mousedown',
                 listener: event => {
-                    this.$log.info('click');
+                    this.$log.debug('mousedown');
+                }
+            },
+            {
+                selector: this.constants.css.selectors.canvas,
+                event: 'mouseup',
+                listener: event => {
+                    this.$log.debug('mouseup');
                 }
             },
             {
@@ -111,8 +118,6 @@ class DrawerController {
                     } else {
                         parcelX = parcelX + prevLast;
                     }
-
-
 
                     this.$log.info('Index: %d', parcelX);
                 }
