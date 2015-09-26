@@ -39,7 +39,8 @@ class FramesController {
         this.constants = {
            css: {
                selectors: {
-                   directive: 'div.directive-frames'
+                   directive: 'div.directive-frames',
+                   body: 'div.directive-frames div.panel-body'
                },
                classes: {
 
@@ -55,10 +56,8 @@ class FramesController {
         this._frames = this._frames || [];
 
         this._frames.push(
-            new this.Frame(uniqueId, this.constants.css.selectors.directive)
+            new this.Frame(uniqueId, this.constants.css.selectors.body)
         );
-
-        //this._frames[0].createCanvas();
     }
 
     setFrame(frame) {
