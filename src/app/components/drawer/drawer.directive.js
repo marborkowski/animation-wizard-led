@@ -108,6 +108,22 @@ class DrawerController {
             },
             {
                 selector: this.constants.css.selectors.canvasMain,
+                event: 'mouseleave',
+                listener: event => {
+                    this.$log.debug('mouseleave');
+                    $timeout(function() {
+                        _self.mousePosition = {
+                            real: {
+                                cell: 0,
+                                row: 0
+                            },
+                            index: 0
+                        };
+                    });
+                }
+            },
+            {
+                selector: this.constants.css.selectors.canvasMain,
                 event: 'mousemove',
                 listener: event => {
                     //this.$log.info('Cursor position on layer: x: %d, y: %d', event.layerX, event.layerY);
