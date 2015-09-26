@@ -9,11 +9,14 @@ import NavigationDirective from '../app/components/navigation/navigation.directi
 import DrawerDirective from '../app/components/drawer/drawer.directive';
 import FramesDirective from '../app/components/frames/frames.directive';
 
+import FrameFactory from '../app/components/services/frame.factory';
+
 angular.module('animationWizardLed', ['ngAnimate', 'ngSanitize', 'ngResource', 'ngCookies', 'LocalStorageModule', 'ui.router', 'ui.bootstrap'])
-  .config(config)
-  .config(routerConfig)
-  .directive('navigation', () => new NavigationDirective())
-  .directive('drawer', () => new DrawerDirective())
-  .directive('frames', () => new FramesDirective())
-  .run(runBlock)
-  .controller('MainController', MainController);
+    .config(config)
+    .config(routerConfig)
+    .directive('navigation', () => new NavigationDirective())
+    .directive('drawer', () => new DrawerDirective())
+    .directive('frames', () => new FramesDirective())
+    .factory('Frame',  () => new FrameFactory)
+    .run(runBlock)
+    .controller('MainController', MainController);

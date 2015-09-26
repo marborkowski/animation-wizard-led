@@ -117,7 +117,7 @@ class DrawerController {
                                 cell: 0,
                                 row: 0
                             },
-                            index: 0
+                            LEDIndex: 0
                         };
                     });
                 }
@@ -137,6 +137,8 @@ class DrawerController {
                     var _parcelX = parcelX;
                     var _parcelY = parcelY;
 
+                    var position = _parcelX + ((_parcelY - 1) * cells);
+
                     this.$log.info('Real x: %d, y: %d', parcelX, parcelY);
 
                     var prevY = parcelY - 1;
@@ -148,7 +150,7 @@ class DrawerController {
                         parcelX = parcelX + prevLast;
                     }
 
-                    this.$log.info('Index: %d', parcelX);
+                    this.$log.info('LED Index: %d, Position: %d', parcelX, position);
 
                     $timeout(function() {
                         _self.mousePosition = {
@@ -156,7 +158,8 @@ class DrawerController {
                                 cell: _parcelX,
                                 row: _parcelY
                             },
-                            index: parcelX
+                            LEDIndex: parcelX,
+                            position: position
                         };
                     });
                 }

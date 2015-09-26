@@ -11,7 +11,8 @@
         <ul class="nav nav-pills" role="tablist">
           <li role="presentation">Cell <span class="badge">{{position.real.cell || 0}}</span></li>
           <li role="presentation">Row <span class="badge">{{position.real.row || 0}}</span></li>
-          <li role="presentation">LED Index <span class="badge">{{position.index || 0}}</span></li>
+          <li role="presentation">LED Index <span class="badge">{{position.LEDIndex || 0}}</span></li>
+          <li role="presentation">Position in Array <span class="badge">{{position.position || 0}}</span></li>
         </ul>
       </div>
     </div>
@@ -19,7 +20,14 @@
 
     <!-- frames : starts here -->
     <div class="panel panel-default">
-      <div class="panel-heading">Frames</div>
+      <div class="panel-heading">
+        <div class="btn-group pull-right" style="margin-top:-2px">
+          <a href="#" class="btn btn-success btn-xs">Lock</a>
+          <a href="#" class="btn btn-primary btn-xs">Delete</a>
+          <a href="#" class="btn btn-danger btn-xs">Move</a>
+        </div>
+        Frames
+      </div>
       <div class="panel-body">
         <frames></frames>
       </div>
