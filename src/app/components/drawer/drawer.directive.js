@@ -137,7 +137,7 @@ class DrawerController {
                     var _parcelX = parcelX;
                     var _parcelY = parcelY;
 
-                    var position = _parcelX + ((_parcelY - 1) * cells);
+                    var position = _parcelX + ((_parcelY - 1) * cells) - 1;
 
                     this.$log.info('Real x: %d, y: %d', parcelX, parcelY);
 
@@ -183,7 +183,7 @@ class DrawerController {
 
     drawShape() {
         this.$log.info('Drawing the basic shape...');
-        this.drawPixels([0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,38,39,40,59,58,57]);
+        this.drawPixels([0,40,80,39,79,119,78,77,117,157,197,237,238,239,199,159,1,2,42,82,81]);
     }
 
     drawPixels(coordinates) {
@@ -203,8 +203,8 @@ class DrawerController {
 
         var block = 0;
 
-        for(var a = 0; a <= rows; a++) {
-            for(var i = 0; i <= cells; i++) {
+        for(var a = 0; a < rows; a++) {
+            for(var i = 0; i < cells; i++) {
                 let index = (i % 2);
 
                 this.canvas.context.fillStyle = coordinates.indexOf(block) >= 0 ? this.constants.drawer.led.color.active : this.constants.drawer.led.color.empty;
