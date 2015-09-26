@@ -28,7 +28,7 @@ class DrawerDirective {
             /**
              * Set canvas references.
              */
-            drawer.setCanvas(body.querySelector(drawer.constants.css.selectors.canvas));
+            drawer.setCanvas(body.querySelector(drawer.constants.css.selectors.canvasMain));
 
             /**
              * Fill canvas with empty points.
@@ -46,6 +46,9 @@ class DrawerDirective {
             templateUrl: 'app/components/drawer/drawer.html',
             controller: DrawerController,
             controllerAs: 'drawer',
+            scope: {
+                mousePosition: '=mousePosition'
+            },
             link: postLink,
             bindToController: true
         };
@@ -57,6 +60,8 @@ class DrawerDirective {
 class DrawerController {
     constructor($rootScope, $timeout, $scope, $log, $element) {
         'ngInject';
+
+        var _self = this;
 
         this.$log = $log;
         this.$element = $element[0];
@@ -70,12 +75,17 @@ class DrawerController {
                 height: 0,
                 led: {
                     width: 25,
-                    height: 25
+                    height: 25,
+                    color: {
+                        active: 'orange',
+                        empty: '#f8f8f8',
+                        stroke: '#f0f0f0'
+                    }
                 }
             },
             css: {
                 selectors: {
-                    canvas: 'canvas',
+                    canvasMain: 'canvas.main',
                     drawer: 'div.directive-drawer'
                 }
             }
@@ -83,21 +93,21 @@ class DrawerController {
 
         this.events = [
             {
-                selector: this.constants.css.selectors.canvas,
+                selector: this.constants.css.selectors.canvasMain,
                 event: 'mousedown',
                 listener: event => {
                     this.$log.debug('mousedown');
                 }
             },
             {
-                selector: this.constants.css.selectors.canvas,
+                selector: this.constants.css.selectors.canvasMain,
                 event: 'mouseup',
                 listener: event => {
                     this.$log.debug('mouseup');
                 }
             },
             {
-                selector: this.constants.css.selectors.canvas,
+                selector: this.constants.css.selectors.canvasMain,
                 event: 'mousemove',
                 listener: event => {
                     //this.$log.info('Cursor position on layer: x: %d, y: %d', event.layerX, event.layerY);
@@ -107,6 +117,9 @@ class DrawerController {
 
                     var parcelX = Math.ceil(event.layerX / this.constants.drawer.led.width) || 1;
                     var parcelY = Math.ceil(event.layerY / this.constants.drawer.led.height) || 1;
+
+                    var _parcelX = parcelX;
+                    var _parcelY = parcelY;
 
                     this.$log.info('Real x: %d, y: %d', parcelX, parcelY);
 
@@ -120,6 +133,16 @@ class DrawerController {
                     }
 
                     this.$log.info('Index: %d', parcelX);
+
+                    $timeout(function() {
+                        _self.mousePosition = {
+                            real: {
+                                cell: _parcelX,
+                                row: _parcelY
+                            },
+                            index: parcelX
+                        };
+                    });
                 }
             }
         ];
@@ -129,19 +152,29 @@ class DrawerController {
 
         this.$log.info('Setting up canvas...');
 
-        this.canvas.body = canvas;
+        this.canvas.background = canvas;
         this.canvas.context = canvas.getContext('2d');
 
         /**
          * Set canvas to be equal to the drawer holder width and height.
          */
-        this.canvas.body.setAttribute('width', this.constants.drawer.width);
-        this.canvas.body.setAttribute('height', this.constants.drawer.height);
+        this.canvas.background.setAttribute('width', this.constants.drawer.width);
+        this.canvas.background.setAttribute('height', this.constants.drawer.height);
     }
 
     drawShape() {
-
         this.$log.info('Drawing the basic shape...');
+        this.drawPixels([0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,38,39,40,59,58,57]);
+    }
+
+    drawPixels(coordinates) {
+        coordinates = coordinates || [];
+
+        this.$log.info('Drawing pixels... [coordinates: %O]', coordinates);
+
+        if(!coordinates instanceof Array) {
+            throw new TypeError('Coordinates should be in Array format.');
+        }
 
         var top = 0;
         var left = 0;
@@ -149,22 +182,29 @@ class DrawerController {
         var cells = Math.round(this.constants.drawer.width / this.constants.drawer.led.width);
         var rows = Math.round(this.constants.drawer.height / this.constants.drawer.led.height);
 
+        var block = 0;
+
         for(var a = 0; a <= rows; a++) {
             for(var i = 0; i <= cells; i++) {
                 let index = (i % 2);
-                this.canvas.context.fillStyle = '#f8f8f8';
+
+                this.canvas.context.fillStyle = coordinates.indexOf(block) >= 0 ? this.constants.drawer.led.color.active : this.constants.drawer.led.color.empty;
                 this.canvas.context.rect(left, top, this.constants.drawer.led.width, this.constants.drawer.led.height);
                 this.canvas.context.lineWidth = 1;
-                this.canvas.context.strokeStyle = 'white';
+                this.canvas.context.strokeStyle = this.constants.drawer.led.color.stroke;
                 this.canvas.context.fill();
                 this.canvas.context.stroke();
+
                 this.canvas.context.closePath();
                 this.canvas.context.beginPath();
+
                 left += this.constants.drawer.led.width;
+                block++;
             }
             left = 0;
             top += this.constants.drawer.led.height;
         }
+
     }
 
     /**

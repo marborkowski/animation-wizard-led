@@ -1,10 +1,4 @@
 div.directive-drawer {
-  @include border-top-radius($border-radius-base);
-  @include border-bottom-radius($border-radius-base);
-  border-width: 1px;
-  border-color: $popover-border-color;
-  border-style: solid;
-  background-image: url(../assets/svg/grid.svg);
   width: 1000px;
   height: 450px;
   cursor: pointer;

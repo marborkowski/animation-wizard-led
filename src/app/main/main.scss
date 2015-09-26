@@ -1,10 +1,18 @@
 section.stage {
-  div.main {
+  /*div.main {
     @include border-top-radius($border-radius-base);
     @include border-bottom-radius($border-radius-base);
     border-width: 1px;
     border-color: $popover-border-color;
     border-style: solid;
     padding: $panel-body-padding;
+  }*/
+  div.panel-footer {
+    li:nth-child(1) {
+      min-width:80px;
+    }
+    li:nth-child(2) {
+      min-width:90px;
+    }
   }
 }
