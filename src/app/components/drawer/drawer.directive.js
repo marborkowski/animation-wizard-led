@@ -22,8 +22,8 @@ class DrawerDirective {
              * Save current width and height.
              * @type {number}
              */
-            drawer.constants.drawer.width = drawerHolder.offsetWidth;
-            drawer.constants.drawer.height = drawerHolder.offsetHeight;
+            drawer.constants.drawer.width = drawerHolder.clientWidth;
+            drawer.constants.drawer.height = drawerHolder.clientHeight;
 
             /**
              * Set canvas references.
@@ -87,7 +87,34 @@ class DrawerController {
                 event: 'click',
                 listener: event => {
                     this.$log.info('click');
-                    //this.unregisterEvents();
+                }
+            },
+            {
+                selector: this.constants.css.selectors.canvas,
+                event: 'mousemove',
+                listener: event => {
+                    //this.$log.info('Cursor position on layer: x: %d, y: %d', event.layerX, event.layerY);
+
+                    var cells = Math.round(this.constants.drawer.width / this.constants.drawer.led.width);
+                    var rows = Math.round(this.constants.drawer.height / this.constants.drawer.led.height);
+
+                    var parcelX = Math.ceil(event.layerX / this.constants.drawer.led.width) || 1;
+                    var parcelY = Math.ceil(event.layerY / this.constants.drawer.led.height) || 1;
+
+                    this.$log.info('Real x: %d, y: %d', parcelX, parcelY);
+
+                    var prevY = parcelY - 1;
+                    var prevLast = prevY * cells;
+
+                    if(parcelY % 2 == 0) {
+                        parcelX = prevLast + (cells - parcelX) + 1;
+                    } else {
+                        parcelX = parcelX + prevLast;
+                    }
+
+
+
+                    this.$log.info('Index: %d', parcelX);
                 }
             }
         ];
@@ -117,13 +144,15 @@ class DrawerController {
         var cells = Math.round(this.constants.drawer.width / this.constants.drawer.led.width);
         var rows = Math.round(this.constants.drawer.height / this.constants.drawer.led.height);
 
-        var colors = ['#FF0000', '#000000'];
-
         for(var a = 0; a <= rows; a++) {
             for(var i = 0; i <= cells; i++) {
                 let index = (i % 2);
-                this.canvas.context.fillStyle = colors[index];
-                this.canvas.context.fillRect(left, top, 25, 25);
+                this.canvas.context.fillStyle = '#f8f8f8';
+                this.canvas.context.rect(left, top, this.constants.drawer.led.width, this.constants.drawer.led.height);
+                this.canvas.context.lineWidth = 1;
+                this.canvas.context.strokeStyle = 'white';
+                this.canvas.context.fill();
+                this.canvas.context.stroke();
                 this.canvas.context.closePath();
                 this.canvas.context.beginPath();
                 left += this.constants.drawer.led.width;
