@@ -195,7 +195,7 @@ class DrawerController {
         var find =  _.findWhere(this._coordinates, position);
 
         if(find) {
-            this._coordinates = _.without(this._coordinates,find);
+            this._coordinates = _.without(this._coordinates, find);
         } else {
             this._coordinates.push(position);
         }
@@ -206,10 +206,16 @@ class DrawerController {
             }
         );
 
+        var inLedStrip = _.pluck(this._coordinates, 'inLed').sort(
+            function(a, b){
+                return a - b;
+            }
+        );
+
         if(this._pixels) {
             this._pixels.length = 0;
         }
-        this._pixels = this.pixels = pixels;
+        this._pixels = this.pixels = inLedStrip;
         this.drawPixels(pixels);
     }
 

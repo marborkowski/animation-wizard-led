@@ -64,7 +64,7 @@ class FramesController {
     }
 
     applyPreview() {
-        this.$log.debug(this.source);
+        this.$log.info('Applying preview to frame %s.', this.selected);
         this._frames[this.selected].applyPreview(this.source.background);
     }
 }
