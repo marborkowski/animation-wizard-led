@@ -33,7 +33,7 @@ class DrawerDirective {
             /**
              * Fill canvas with empty points.
              */
-            drawer.drawShape();
+            drawer.newFrame();
 
             /**
              * Register events.
@@ -47,7 +47,8 @@ class DrawerDirective {
             controller: DrawerController,
             controllerAs: 'drawer',
             scope: {
-                mousePosition: '=mousePosition'
+                mousePosition: '=mousePosition',
+                pixels: '=pixels'
             },
             link: postLink,
             bindToController: true
@@ -77,7 +78,7 @@ class DrawerController {
                     width: 25,
                     height: 25,
                     color: {
-                        active: 'forestgreen',
+                        active: 'red',
                         empty: '#f8f8f8',
                         stroke: '#f0f0f0'
                     }
@@ -175,15 +176,20 @@ class DrawerController {
          */
         this.canvas.background.setAttribute('width', this.constants.drawer.width);
         this.canvas.background.setAttribute('height', this.constants.drawer.height);
+
+    }
+
+    newFrame() {
+        if(this._coordinates) {
+            this._coordinates.length = 0;
+        } else {
+            this._coordinates = [];
+        }
+
+        this.drawPixels();
     }
 
     setPixel(position) {
-        /*
-        {
-            inLed:0,
-            inArray:0
-        }
-        */
         this._coordinates = this._coordinates || [];
         var find =  _.findWhere(this._coordinates, position);
 
@@ -193,10 +199,20 @@ class DrawerController {
             this._coordinates.push(position);
         }
 
-        this.drawPixels(_.pluck(this._coordinates, 'inArray'));
+        var pixels = _.pluck(this._coordinates, 'inArray').sort(
+            function(a, b){
+                return a - b;
+            }
+        );
+
+        if(this._pixels) {
+            this._pixels.length = 0;
+        }
+        this._pixels = this.pixels = pixels;
+        this.drawPixels(pixels);
     }
 
-    drawShape() {
+    loadShape() {
         this.$log.info('Drawing the basic shape...');
         this.drawPixels([0,40,80,39,79,119,78,77,117,157,197,237,238,239,199,159,1,2,42,82,81]);
     }

@@ -3,10 +3,11 @@
 
     <!-- drawer : starts here -->
     <div class="panel panel-default">
-      <div class="panel-heading">Drawing area</div>
+      <div class="panel-heading"><i class="glyphicon glyphicon-pencil"></i> Drawing area</div>
       <div class="panel-body">
-        <drawer mouse-position="position"></drawer>
+        <drawer mouse-position="position" pixels="pixels" class="pull-center"></drawer>
       </div>
+
       <div class="panel-footer">
         <ul class="nav nav-pills" role="tablist">
           <li role="presentation">Cell <span class="badge">{{position.real.cell || 0}}</span></li>
@@ -15,6 +16,13 @@
           <li role="presentation">Index in Array <span class="badge">{{position.position || 0}}</span></li>
         </ul>
       </div>
+
+      <div class="panel-body"></div>
+
+      <div class="panel-heading"><i class="glyphicon glyphicon-compressed"></i> Output Array</div>
+      <ul class="list-group">
+        <li class="list-group-item">[{{pixels.join(', ')}}]</li>
+      </ul>
     </div>
     <!-- drawer : ends here -->
 
