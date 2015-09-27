@@ -97,6 +97,10 @@ class DrawerController {
                 event: 'mousedown',
                 listener: event => {
                     this.$log.debug('mousedown');
+                    this.setPixel({
+                        inLed: _self.mousePosition.LEDIndex,
+                        inArray: _self.mousePosition.position
+                    });
                 }
             },
             {
@@ -112,13 +116,7 @@ class DrawerController {
                 listener: event => {
                     this.$log.debug('mouseleave');
                     $timeout(function() {
-                        _self.mousePosition = {
-                            real: {
-                                cell: 0,
-                                row: 0
-                            },
-                            LEDIndex: 0
-                        };
+                        _self.mousePosition = {};
                     });
                 }
             },
@@ -126,8 +124,6 @@ class DrawerController {
                 selector: this.constants.css.selectors.canvasMain,
                 event: 'mousemove',
                 listener: event => {
-                    //this.$log.info('Cursor position on layer: x: %d, y: %d', event.layerX, event.layerY);
-
                     var cells = Math.round(this.constants.drawer.width / this.constants.drawer.led.width);
                     var rows = Math.round(this.constants.drawer.height / this.constants.drawer.led.height);
 
@@ -147,7 +143,7 @@ class DrawerController {
                     if(parcelY % 2 == 0) {
                         parcelX = prevLast + (cells - parcelX) + 1;
                     } else {
-                        parcelX = parcelX + prevLast;
+                        parcelX = parcelX + prevLast - 1;
                     }
 
                     this.$log.info('LED Index: %d, Position: %d', parcelX, position);
@@ -179,6 +175,25 @@ class DrawerController {
          */
         this.canvas.background.setAttribute('width', this.constants.drawer.width);
         this.canvas.background.setAttribute('height', this.constants.drawer.height);
+    }
+
+    setPixel(position) {
+        /*
+        {
+            inLed:0,
+            inArray:0
+        }
+        */
+        this._coordinates = this._coordinates || [];
+        var find =  _.findWhere(this._coordinates, position);
+
+        if(find) {
+            this._coordinates = _.without(this._coordinates,find);
+        } else {
+            this._coordinates.push(position);
+        }
+
+        this.drawPixels(_.pluck(this._coordinates, 'inArray'));
     }
 
     drawShape() {
