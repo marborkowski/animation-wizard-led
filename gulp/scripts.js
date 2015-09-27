@@ -9,6 +9,7 @@ var browserSync = require('browser-sync');
 var $ = require('gulp-load-plugins')();
 
 function webpack(watch, callback) {
+
   var webpackOptions = {
     watch: watch,
     module: {

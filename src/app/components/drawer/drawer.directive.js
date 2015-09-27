@@ -129,6 +129,7 @@ class DrawerController {
                     var cells = Math.round(this.constants.drawer.width / this.constants.drawer.led.width);
                     var rows = Math.round(this.constants.drawer.height / this.constants.drawer.led.height);
 
+                    // TODO layerX and layerY are buggy on the Internet Explorer!!!
                     var parcelX = Math.ceil(event.layerX / this.constants.drawer.led.width) || 1;
                     var parcelY = Math.ceil(event.layerY / this.constants.drawer.led.height) || 1;
 

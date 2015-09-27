@@ -25,6 +25,12 @@ gulp.task('watch', ['scripts:watch', 'inject'], function () {
     }
   });
 
+  gulp.watch([
+    path.join(conf.paths.src, '/app/**/*.js')
+  ], function(event) {
+    gulp.start('todo');
+  });
+
 
   gulp.watch(path.join(conf.paths.src, '/app/**/*.html'), function(event) {
     browserSync.reload(event.path);
