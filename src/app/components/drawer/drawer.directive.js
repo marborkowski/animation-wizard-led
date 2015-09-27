@@ -77,7 +77,7 @@ class DrawerController {
                     width: 25,
                     height: 25,
                     color: {
-                        active: 'orange',
+                        active: 'forestgreen',
                         empty: '#f8f8f8',
                         stroke: '#f0f0f0'
                     }
@@ -141,7 +141,7 @@ class DrawerController {
                     var prevLast = prevY * cells;
 
                     if(parcelY % 2 == 0) {
-                        parcelX = prevLast + (cells - parcelX) + 1;
+                        parcelX = prevLast + (cells - parcelX);
                     } else {
                         parcelX = parcelX + prevLast - 1;
                     }
