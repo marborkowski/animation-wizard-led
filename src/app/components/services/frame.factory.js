@@ -38,6 +38,12 @@ export default class FrameFactory {
             this.holder.appendChild(canvas);
         };
 
+        Frame.prototype.applyPreview = function(canvas) {
+            // TODO generate real thumbnail!!!
+            var element = this.holder.querySelector('canvas').getContext('2d');
+            element.drawImage(canvas, 0, 0);
+        };
+
         Frame.prototype.getProfiler = function() {
             console.log(this.profile1);
 

@@ -48,7 +48,8 @@ class DrawerDirective {
             controllerAs: 'drawer',
             scope: {
                 mousePosition: '=mousePosition',
-                pixels: '=pixels'
+                pixels: '=pixels',
+                canvas: '=canvas'
             },
             link: postLink,
             bindToController: true
@@ -75,8 +76,8 @@ class DrawerController {
                 width: 0,
                 height: 0,
                 led: {
-                    width: 25,
-                    height: 25,
+                    width: 50,
+                    height: 50,
                     color: {
                         active: 'red',
                         empty: '#f8f8f8',
@@ -186,7 +187,7 @@ class DrawerController {
             this._coordinates = [];
         }
 
-        this.drawPixels();
+        this.drawPixels([0,1,2]);
     }
 
     setPixel(position) {

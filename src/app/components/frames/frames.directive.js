@@ -15,7 +15,8 @@ class FramesDirective {
             controller: FramesController,
             controllerAs: 'frames',
             scope: {
-
+                selected: '@selected',
+                source: '=source'
             },
             link: postLink,
             bindToController: true
@@ -58,10 +59,13 @@ class FramesController {
         this._frames.push(
             new this.Frame(uniqueId, this.constants.css.selectors.body)
         );
+
+        this.applyPreview();
     }
 
-    setFrame(frame) {
-
+    applyPreview() {
+        this.$log.debug(this.source);
+        this._frames[this.selected].applyPreview(this.source.background);
     }
 }
 
