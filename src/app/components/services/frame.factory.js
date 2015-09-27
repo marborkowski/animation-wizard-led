@@ -31,6 +31,8 @@ export default class FrameFactory {
             this.addCanvas();
         };
 
+        Frame.prototype.maxWidth = 300;
+
         Frame.prototype.addCanvas = function() {
             var canvas = document.createElement('canvas');
             canvas.setAttribute('id', this.id);
@@ -39,9 +41,20 @@ export default class FrameFactory {
         };
 
         Frame.prototype.applyPreview = function(canvas) {
-            // TODO generate real thumbnail!!!
-            var element = this.holder.querySelector('canvas').getContext('2d');
-            element.drawImage(canvas, 0, 0);
+
+            var _canvas = this.holder.querySelector('canvas');
+            var element = _canvas.getContext('2d');
+            var originalWidth = canvas.width;
+            var originalHeight = canvas.height;
+
+            var newWidth = this.maxWidth;
+            var newHeight = originalHeight * newWidth / originalWidth;
+
+            _canvas.width = newWidth;
+            _canvas.height = newHeight;
+
+            element.drawImage(canvas, 0, 0, originalWidth, originalHeight, 0, 0, newWidth, newHeight);
+
         };
 
         Frame.prototype.getProfiler = function() {

@@ -76,8 +76,8 @@ class DrawerController {
                 width: 0,
                 height: 0,
                 led: {
-                    width: 50,
-                    height: 50,
+                    width: 25,
+                    height: 25,
                     color: {
                         active: 'red',
                         empty: '#f8f8f8',

@@ -6,7 +6,7 @@ class FramesDirective {
         'ngInject';
 
         let postLink = function (scope, element, attr, frames) {
-
+            frames.registerWatchers();
         };
 
         let directive = {
@@ -16,7 +16,8 @@ class FramesDirective {
             controllerAs: 'frames',
             scope: {
                 selected: '@selected',
-                source: '=source'
+                source: '=source',
+                pixels: '=pixels'
             },
             link: postLink,
             bindToController: true
@@ -35,6 +36,7 @@ class FramesController {
         this.$log = $log;
         this.$element = $element[0];
         this.$timeout = $timeout;
+        this.$scope = $scope;
         this.Frame = Frame;
 
         this.constants = {
@@ -52,6 +54,26 @@ class FramesController {
         this.addFrame();
     }
 
+    registerWatchers() {
+        this._watchers = this._watchers || [];
+        var _self = this;
+
+        var watchers = [
+            {
+                model: 'frames.pixels',
+                type: '$watch',
+                listener: function(newValue, oldValue) {
+                    _self.applyPreview();
+                }
+            }
+        ];
+
+        watchers.forEach(watcher => {
+            _self._watchers.push(
+                _self.$scope[watcher.type](watcher.model, watcher.listener, true)
+            );
+        })
+    }
     addFrame() {
         var uniqueId = 'frame' + Date.now();
         this._frames = this._frames || [];
