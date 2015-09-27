@@ -6,7 +6,7 @@ class NavigationDirective {
         'ngInject';
 
         let postLink = function(scope, el, attr, navigation, $timeout) {
-            // TODO
+            // ...
         };
 
         let directive = {
@@ -68,7 +68,6 @@ class NavigationController {
             _version: this.constants._version
         };
 
-        // TODO Create 'Watcher' object ... new Watcher(a,b,c)
         this.watchers = [
             {
                 model: 'navigation.settings',
