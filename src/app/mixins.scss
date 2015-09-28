@@ -1,0 +1,13 @@
+@mixin animateAll($time:1s, $type: ease-in-out) {
+  -webkit-transition: all $time $type;
+  -moz-transition: all $time $type;
+  -o-transition: all $time $type;
+  transition: all $time $type;
+}
+
+@mixin setScale($scale:1) {
+  transform: scale($scale);
+  -webkit-transform: scale($scale);
+  -moz-transform: scale($scale);
+  -o-transform: scale($scale);
+}

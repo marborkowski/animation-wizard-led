@@ -60,7 +60,7 @@ class DrawerDirective {
 }
 
 class DrawerController {
-    constructor($rootScope, $timeout, $scope, $log, $element) {
+    constructor($rootScope, $timeout, $scope, $log, $element, Broadcast) {
         'ngInject';
 
         var _self = this;
@@ -68,6 +68,8 @@ class DrawerController {
         this.$log = $log;
         this.$element = $element[0];
         this.$timeout = $timeout;
+        this.$rootScope = $rootScope;
+        this.Broadcast = Broadcast;
 
         this.canvas = {};
 
@@ -164,6 +166,10 @@ class DrawerController {
                 }
             }
         ];
+
+        this.$rootScope.$on(this.Broadcast.frame.new, function() {
+            _self.$log.info('New frame.');
+        });
     }
 
     setCanvas(canvas) {
@@ -246,15 +252,18 @@ class DrawerController {
             for(var i = 0; i < cells; i++) {
                 let index = (i % 2);
 
-                this.canvas.context.fillStyle = coordinates.indexOf(block) >= 0 ? this.constants.drawer.led.color.active : this.constants.drawer.led.color.empty;
-                this.canvas.context.rect(left, top, this.constants.drawer.led.width, this.constants.drawer.led.height);
-                this.canvas.context.lineWidth = 1;
-                this.canvas.context.strokeStyle = this.constants.drawer.led.color.stroke;
-                this.canvas.context.fill();
-                this.canvas.context.stroke();
+                // TODO Optimize the way how the pixels are drawing.
+                //if(coordinates.indexOf(block) >= 0) {
+                    this.canvas.context.fillStyle = coordinates.indexOf(block) >= 0 ? this.constants.drawer.led.color.active : this.constants.drawer.led.color.empty;
+                    this.canvas.context.rect(left, top, this.constants.drawer.led.width, this.constants.drawer.led.height);
+                    this.canvas.context.lineWidth = 1;
+                    this.canvas.context.strokeStyle = this.constants.drawer.led.color.stroke;
+                    this.canvas.context.fill();
+                    this.canvas.context.stroke();
 
-                this.canvas.context.closePath();
-                this.canvas.context.beginPath();
+                    this.canvas.context.closePath();
+                    this.canvas.context.beginPath();
+                //}
 
                 left += this.constants.drawer.led.width;
                 block++;
@@ -325,6 +334,7 @@ class DrawerController {
         this._events = this._events || [];
         this._events.push(event);
     }
+
 }
 
 export default DrawerDirective;

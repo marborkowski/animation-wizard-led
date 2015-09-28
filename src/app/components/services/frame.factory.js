@@ -28,33 +28,7 @@ export default class FrameFactory {
             }
 
             this.profile1 = 'marcin';
-            this.addCanvas();
-        };
-
-        Frame.prototype.maxWidth = 300;
-
-        Frame.prototype.addCanvas = function() {
-            var canvas = document.createElement('canvas');
-            canvas.setAttribute('id', this.id);
-
-            this.holder.appendChild(canvas);
-        };
-
-        Frame.prototype.applyPreview = function(canvas) {
-
-            var _canvas = this.holder.querySelector('canvas');
-            var element = _canvas.getContext('2d');
-            var originalWidth = canvas.width;
-            var originalHeight = canvas.height;
-
-            var newWidth = this.maxWidth;
-            var newHeight = originalHeight * newWidth / originalWidth;
-
-            _canvas.width = newWidth;
-            _canvas.height = newHeight;
-
-            element.drawImage(canvas, 0, 0, originalWidth, originalHeight, 0, 0, newWidth, newHeight);
-
+            //this.addCanvas();
         };
 
         Frame.prototype.getProfiler = function() {
