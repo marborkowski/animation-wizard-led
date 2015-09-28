@@ -3,12 +3,16 @@ export default class BroadcastingFactory {
         'ngInject';
 
         var events = {
-            frame: 'frame'
+            frame: 'frame',
+            animation: 'animation'
         };
 
         var broadcast = {
             frame: {
                 new: events.frame + ':new'
+            },
+            animation: {
+                play: events.animation + ':play'
             }
         };
 

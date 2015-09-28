@@ -23,7 +23,7 @@ class NavigationDirective {
 }
 
 class NavigationController {
-    constructor($rootScope, $timeout, $scope, localStorageService, $log) {
+    constructor($rootScope, $timeout, $scope, localStorageService, $log, Broadcast) {
         'ngInject';
 
         /**
@@ -33,6 +33,8 @@ class NavigationController {
         this.$scope = $scope;
         this.$timeout = $timeout;
         this.localStorageService = localStorageService;
+        this.Broadcast = Broadcast;
+        this.$log = $log;
 
         this.constants = {
             _version: 1,
@@ -96,6 +98,11 @@ class NavigationController {
 
     }
 
+    playx() {
+        console.log(this.$log.info);
+        this.$log.info('Play.', this.Broadcast.animation.play);
+        this.$rootScope.$broadcast(this.Broadcast.animation.play);
+    }
 
     /**
      * Register the specify watcher collection.

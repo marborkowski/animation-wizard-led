@@ -11,3 +11,10 @@
   -moz-transform: scale($scale);
   -o-transform: scale($scale);
 }
+
+@mixin setOpacity($opacity:1) {
+  filter: alpha(opacity=$opacity*100);
+  -moz-opacity: $opacity;
+  -khtml-opacity: $opacity;
+  opacity: $opacity;
+}

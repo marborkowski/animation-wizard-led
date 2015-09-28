@@ -31,7 +31,6 @@ class FramesController {
     constructor($rootScope, $timeout, $scope, $log, $element, Frame, Broadcast) {
         'ngInject';
 
-        console.log(Broadcast.frame.new);
         var _self = this;
 
         this.$log = $log;

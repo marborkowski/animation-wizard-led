@@ -1,0 +1,14 @@
+div.cs-modal {
+  display:none;
+
+  &.visible {
+    display:initial;
+    background:rgba(0,0,0,0.5);
+    @include setOpacity(1);
+  }
+
+  div.modal-dialog {
+    padding:0;
+    margin-top:15%;
+  }
+}

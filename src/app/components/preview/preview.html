@@ -1,0 +1,19 @@
+<div class="cs-modal modal fade" ng-class="{'visible': preview.open}" role="dialog">
+  <div class="modal-dialog">
+
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" ng-click="preview.open = false">&times;</button>
+        <h4 class="modal-title">Animation Preview</h4>
+      </div>
+      <div class="modal-body">
+        <canvas></canvas>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="preview.open = false">Close</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+{{preview.visible}}
