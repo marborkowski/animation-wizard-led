@@ -147,6 +147,7 @@ class PreviewController {
             }
 
             frames[currentIndex].classList.remove(_self.constants.css.classes.hide);
+
             _self.$log.debug('Frame %d of %d', currentIndex + 1, frames.length);
 
             previousIndex = currentIndex;

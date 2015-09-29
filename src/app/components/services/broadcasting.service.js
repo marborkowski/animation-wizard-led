@@ -1,4 +1,4 @@
-export default class BroadcastingFactory {
+export default class BroadcastingService {
     constructor() {
         'ngInject';
 

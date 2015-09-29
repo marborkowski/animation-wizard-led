@@ -23,6 +23,7 @@ import PreviewDirective from '../app/components/preview/preview.directive';
  */
 import FrameFactory from '../app/components/services/frame.factory';
 import BroadcastingService from '../app/components/services/broadcasting.service';
+import CollectorService from '../app/components/services/collector.service';
 
 angular.module('animationWizardLed', ['ngAnimate', 'ngSanitize', 'ngResource', 'ngCookies', 'LocalStorageModule', 'ui.router', 'ui.bootstrap'])
     .config(config)
@@ -33,5 +34,6 @@ angular.module('animationWizardLed', ['ngAnimate', 'ngSanitize', 'ngResource', '
     .directive('preview', () => new PreviewDirective())
     .factory('Frame',  () => new FrameFactory)
     .factory('Broadcast',  () => new BroadcastingService())
+    .factory('Collector',  () => new CollectorService())
     .run(runBlock)
     .controller('MainController', MainController);

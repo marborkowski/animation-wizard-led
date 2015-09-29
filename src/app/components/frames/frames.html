@@ -7,11 +7,11 @@
         <a href="#" class="btn btn-danger btn-xs">Move</a>
       </div>
       <i class="glyphicon glyphicon-blackboard"></i>
-      Frames <span class="badge">{{frames._frames.length}}</span>
+      Frames <span class="badge">{{frames.Collector.frames.length}}</span>
     </div>
     <div class="panel-body">
       <ul class="list-inline">
-        <li ng-repeat="frame in frames._frames track by $index" ng-click="frames.setActiveFrame($index);">
+        <li ng-repeat="frame in frames.Collector.frames track by $index" ng-click="frames.setActiveFrame($index);">
           <div>
             <canvas id="{{frame.id}}" class="cs-frame"></canvas>
             <span>{{$index + 1}}</span>

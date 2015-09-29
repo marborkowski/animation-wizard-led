@@ -28,8 +28,9 @@ class FramesDirective {
 }
 
 class FramesController {
-    constructor($rootScope, $timeout, $scope, $log, $element, Frame, Broadcast) {
+    constructor($rootScope, $timeout, $scope, $log, $element, Frame, Broadcast, Collector) {
         'ngInject';
+
 
         var _self = this;
 
@@ -39,7 +40,8 @@ class FramesController {
         this.$scope = $scope;
         this.Frame = Frame;
         this.Broadcast = Broadcast;
-        this.$rootScope = $rootScope
+        this.$rootScope = $rootScope;
+        this.Collector = Collector;
 
         this.states = {
             activeFrame: 0
@@ -85,9 +87,8 @@ class FramesController {
     }
     addFrame() {
         var uniqueId = 'frame' + Date.now();
-        this._frames = this._frames || [];
 
-        this._frames.push(
+        this.Collector.frames.push(
             new this.Frame(uniqueId, this.constants.css.selectors.body)
         );
 
@@ -106,7 +107,7 @@ class FramesController {
         this.$log.info('Applying preview to frame %s.', this.selected);
         var _self = this;
 
-        frameId = frameId || _self._frames[_self.selected].id;
+        frameId = frameId || _self.Collector.frames[_self.selected].id;
 
         setTimeout(function() {
             var baseCanvas = _self.source.background;
