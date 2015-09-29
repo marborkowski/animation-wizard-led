@@ -3,7 +3,8 @@ export default class CollectorService {
         'ngInject';
 
         var collector = {
-            frames: []
+            frames: [],
+            selected: 0
         };
 
         return collector;

@@ -22,6 +22,7 @@ export default class FrameFactory {
 
             this.id = id;
             this.holder = document.querySelector(holder);
+            this.LEDArray = [];
 
             if(this.holder === null) {
                 throw new Error('Could not find DOM element: ' + holder);
@@ -29,6 +30,15 @@ export default class FrameFactory {
 
             this.profile1 = 'marcin';
             //this.addCanvas();
+        };
+
+        Frame.prototype.setLEDArray = function(collection) {
+            this.LEDArray.length = 0;
+            this.LEDArray = collection;
+        };
+
+        Frame.prototype.getLEDArray = function() {
+            return this.LEDArray;
         };
 
         Frame.prototype.getProfiler = function() {

@@ -27,7 +27,7 @@ class PreviewDirective {
 }
 
 class PreviewController {
-    constructor($rootScope, $timeout, $scope, $log, $element, Broadcast) {
+    constructor($rootScope, $timeout, $scope, $log, $element, Broadcast, Collector) {
         'ngInject';
 
         var _self = this;
@@ -38,6 +38,7 @@ class PreviewController {
         this.$scope = $scope;
         this.$rootScope = $rootScope;
         this.Broadcast = Broadcast;
+        this.Collector = Collector;
 
         this.domElements = {};
         this.constants = {
@@ -48,7 +49,8 @@ class PreviewController {
                 },
                 selectors: {
                     frames: 'div.directive-frames canvas',
-                    body: 'div.modal-body'
+                    body: 'div.modal-body',
+                    LEDArray: 'div.LEDArray'
                 }
 
             }
@@ -71,6 +73,7 @@ class PreviewController {
 
         _self.domElements.frames = document.querySelectorAll(_self.constants.css.selectors.frames);
         _self.domElements.body = _self.$element.querySelector(_self.constants.css.selectors.body);
+        _self.domElements.LEDArray = _self.$element.querySelector(_self.constants.css.selectors.LEDArray);
 
         /**
          * Clear the current preview set.
@@ -149,6 +152,8 @@ class PreviewController {
             frames[currentIndex].classList.remove(_self.constants.css.classes.hide);
 
             _self.$log.debug('Frame %d of %d', currentIndex + 1, frames.length);
+
+            _self.domElements.LEDArray.innerText = '[' +_self.Collector.frames[currentIndex].getLEDArray().join(', ') + ']';
 
             previousIndex = currentIndex;
             currentIndex++;

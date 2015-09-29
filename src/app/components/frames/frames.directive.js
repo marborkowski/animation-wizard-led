@@ -100,14 +100,15 @@ class FramesController {
     setActiveFrame(index) {
         this.$log.info('Active frame is %d', index);
         this.states.activeFrame = index;
-        this.selected = index;
+        //this.selected = index;
+        this.Collector.selected = index;
     }
 
     applyPreview(frameId) {
-        this.$log.info('Applying preview to frame %s.', this.selected);
+        this.$log.info('Applying preview to frame %s.', this.Collector.selected);
         var _self = this;
 
-        frameId = frameId || _self.Collector.frames[_self.selected].id;
+        frameId = frameId || _self.Collector.frames[_self.Collector.selected].id;
 
         setTimeout(function() {
             var baseCanvas = _self.source.background;

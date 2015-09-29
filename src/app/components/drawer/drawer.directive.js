@@ -60,7 +60,7 @@ class DrawerDirective {
 }
 
 class DrawerController {
-    constructor($rootScope, $timeout, $scope, $log, $element, Broadcast) {
+    constructor($rootScope, $timeout, $scope, $log, $element, Broadcast, Collector) {
         'ngInject';
 
         var _self = this;
@@ -70,6 +70,7 @@ class DrawerController {
         this.$timeout = $timeout;
         this.$rootScope = $rootScope;
         this.Broadcast = Broadcast;
+        this.Collector = Collector;
 
         this.canvas = {};
 
@@ -194,7 +195,7 @@ class DrawerController {
             this._coordinates = [];
         }
 
-        this.drawPixels([0,1,2]);
+        this.drawPixels();
     }
 
     setPixel(position) {
@@ -233,6 +234,10 @@ class DrawerController {
 
     drawPixels(coordinates) {
         coordinates = coordinates || [];
+
+        if(this.Collector.frames.length > 0) {
+            this.Collector.frames[this.Collector.selected].setLEDArray(coordinates);
+        }
 
         this.$log.info('Drawing pixels... [coordinates: %O]', coordinates);
 
