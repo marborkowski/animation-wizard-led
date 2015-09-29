@@ -96,6 +96,7 @@ class DrawerController {
             }
         };
 
+        // TODO Add method to draw not only in 'pixel by pixel' mode.
         this.events = [
             {
                 selector: this.constants.css.selectors.canvasMain,
