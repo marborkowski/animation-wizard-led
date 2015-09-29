@@ -119,8 +119,8 @@ class FramesController {
             var newWidth = _self.constants.thumb.maxWidth;
             var newHeight = originalHeight * newWidth / originalWidth;
 
-            targetCanvas.width = newWidth;
-            targetCanvas.height = newHeight;
+            targetCanvas.setAttribute('width', newWidth);
+            targetCanvas.setAttribute('height', newHeight);
 
             element.drawImage(baseCanvas, 0, 0, originalWidth, originalHeight, 0, 0, newWidth, newHeight);
         });

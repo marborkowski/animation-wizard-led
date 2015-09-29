@@ -99,7 +99,6 @@ class NavigationController {
     }
 
     playx() {
-        console.log(this.$log.info);
         this.$log.info('Play.', this.Broadcast.animation.play);
         this.$rootScope.$broadcast(this.Broadcast.animation.play);
     }
