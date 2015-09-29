@@ -7,8 +7,6 @@ class PreviewDirective {
 
         var postLink = function (scope, element, attr, prev) {
 
-            prev.domElements.frames = document.querySelectorAll(prev.constants.css.selectors.frames);
-            prev.domElements.body = prev.$element.querySelector(prev.constants.css.selectors.body);
         };
 
         let directive = {
@@ -17,7 +15,8 @@ class PreviewDirective {
             controller: PreviewController,
             controllerAs: 'prev',
             scope: {
-                open: '='
+                open: '=',
+                fps: '='
             },
             link: postLink,
             bindToController: true
@@ -42,6 +41,7 @@ class PreviewController {
 
         this.domElements = {};
         this.constants = {
+            fps: this.fps || 25,
             css: {
                 classes: {
                     hide: 'hide'
@@ -54,6 +54,8 @@ class PreviewController {
             }
         };
 
+        this.interval = null;
+
         this.$rootScope.$on(this.Broadcast.animation.play, function () {
             _self.$log.info('Playing...');
             _self.open = true;
@@ -63,7 +65,12 @@ class PreviewController {
     }
 
     setUpAnimation() {
+        // TODO Make the canvas wider and more well-fitting.
+
         var _self = this;
+
+        _self.domElements.frames = document.querySelectorAll(_self.constants.css.selectors.frames);
+        _self.domElements.body = _self.$element.querySelector(_self.constants.css.selectors.body);
 
         /**
          * Clear the current preview set.
@@ -117,12 +124,66 @@ class PreviewController {
         }
 
         setTimeout(function () {
+            /**
+             * When DOM is ready, we can start animate our work.
+             */
             _self.play();
         });
     }
 
     play() {
+        var _self = this;
 
+        var frames = this.domElements.body.querySelectorAll('canvas');
+        var currentIndex = 0;
+        var previousIndex = 0;
+
+        /**
+         * Show next frame.
+         */
+        var changeFrame = function() {
+            if(previousIndex >= 0) {
+                frames[previousIndex].classList.add(_self.constants.css.classes.hide);
+            }
+
+            frames[currentIndex].classList.remove(_self.constants.css.classes.hide);
+            _self.$log.debug('Frame %d of %d', currentIndex + 1, frames.length);
+
+            previousIndex = currentIndex;
+            currentIndex++;
+
+            if(currentIndex >= frames.length) {
+                currentIndex = 0;
+            }
+        };
+
+        /**
+         * Convert FPS to milliseconds.
+         * @type {number|*}
+         */
+        let speed = 1000 / this.constants.fps;
+
+        /**
+         * Run interval.
+         * @type {number|*}
+         */
+        this.interval = setInterval(function() {
+            changeFrame();
+        }, speed);
+
+        /**
+         * Change first frame immediately.
+         */
+        changeFrame();
+    }
+    stop() {
+        clearInterval(this.interval);
+        this.interval = null;
+    }
+
+    close() {
+        this.stop();
+        this.open = false;
     }
 }
 

@@ -7,3 +7,4 @@
 | Filename | line # | TODO
 |:------|:------:|:------
 | components\drawer\drawer.directive.js | 255 | Optimize the way how the pixels are drawing.
+| components\preview\preview.directive.js | 68 | Make the canvas wider and more well-fitting.
