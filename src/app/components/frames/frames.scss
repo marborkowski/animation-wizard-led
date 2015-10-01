@@ -43,7 +43,9 @@ div.directive-frames {
           border-style: solid;
           cursor: pointer;
           &.active {
-            border: 1px solid red;
+            border-width: 2px;
+            border-style: solid;
+            border-color: red;
           }
         }
       }

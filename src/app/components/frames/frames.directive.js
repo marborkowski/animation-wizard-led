@@ -95,13 +95,21 @@ class FramesController {
         this.$rootScope.$broadcast(this.Broadcast.frame.new);
 
         this.applyPreview(uniqueId);
+        this.setActiveFrame(this.Collector.frames.length - 1);
     }
 
+    scrollToEnd() {
+        var _self = this;
+        setTimeout(function() {
+            var panel = _self.$element.querySelector(_self.constants.css.selectors.body);
+            panel.scrollLeft = panel.scrollWidth;
+        });
+    }
     setActiveFrame(index) {
         this.$log.info('Active frame is %d', index);
-        this.states.activeFrame = index;
-        //this.selected = index;
+        //this.states.activeFrame = index;
         this.Collector.selected = index;
+        this.scrollToEnd();
     }
 
     applyPreview(frameId) {

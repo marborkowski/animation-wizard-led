@@ -13,7 +13,7 @@
       <ul class="list-inline">
         <li ng-repeat="frame in frames.Collector.frames track by $index" ng-click="frames.setActiveFrame($index);">
           <div>
-            <canvas id="{{frame.id}}" class="cs-frame"></canvas>
+            <canvas id="{{frame.id}}" class="cs-frame" ng-class="{'active': frames.Collector.selected == $index}"></canvas>
             <span>{{$index + 1}}</span>
           </div>
         </li>
