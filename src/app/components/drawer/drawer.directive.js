@@ -207,7 +207,7 @@ class DrawerController {
         });
 
         this.$scope.$watch(this.Collector.selected, function() {
-            console.log('a');
+            console.log('selected');
         }, true);
     }
 
@@ -270,6 +270,9 @@ class DrawerController {
             this._pixels.length = 0;
         }
         this._pixels = this.pixels = inLedStrip;
+
+        this.Collector.frames[this.Collector.selected].setLEDArray(this._pixels.slice(0));
+
         this.drawPixel(position);
     }
 
