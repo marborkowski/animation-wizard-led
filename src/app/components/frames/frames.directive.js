@@ -95,7 +95,7 @@ class FramesController {
         this.$rootScope.$broadcast(this.Broadcast.frame.new);
 
         this.applyPreview(uniqueId);
-        this.setActiveFrame(this.Collector.frames.length - 1);
+        this.setActiveFrame(this.Collector.frames.length - 1, true);
     }
 
     scrollToEnd() {
@@ -105,11 +105,15 @@ class FramesController {
             panel.scrollLeft = panel.scrollWidth;
         });
     }
-    setActiveFrame(index) {
+    setActiveFrame(index, scroll) {
+        scroll = scroll || false;
+        
         this.$log.info('Active frame is %d', index);
-        //this.states.activeFrame = index;
         this.Collector.selected = index;
-        this.scrollToEnd();
+
+        if(scroll) {
+            this.scrollToEnd();
+        }
     }
 
     applyPreview(frameId) {
@@ -119,7 +123,7 @@ class FramesController {
         frameId = frameId || _self.Collector.frames[_self.Collector.selected].id;
 
         setTimeout(function() {
-            var baseCanvas = _self.source.background;
+            var baseCanvas = _self.source;
             var targetCanvas = document.getElementById(frameId);
 
             var element = targetCanvas.getContext('2d');

@@ -28,7 +28,7 @@ class DrawerDirective {
             /**
              * Set canvas references.
              */
-            drawer.setCanvas(body.querySelector(drawer.constants.css.selectors.canvasMain));
+            drawer.setCanvas(body.querySelector(drawer.constants.css.selectors.canvasMain), body.querySelector(drawer.constants.css.selectors.canvasBackground));
 
             /**
              * Fill canvas with empty points.
@@ -69,10 +69,14 @@ class DrawerController {
         this.$element = $element[0];
         this.$timeout = $timeout;
         this.$rootScope = $rootScope;
+        this.$scope = $scope;
         this.Broadcast = Broadcast;
         this.Collector = Collector;
 
-        this.canvas = {};
+        this.canvas = {
+            background: {},
+            layer: {}
+        };
 
         this.constants = {
             drawer: {
@@ -91,22 +95,34 @@ class DrawerController {
             css: {
                 selectors: {
                     canvasMain: 'canvas.main',
+                    canvasBackground: 'canvas.background',
                     drawer: 'div.directive-drawer'
                 }
             }
         };
 
-        // TODO Add method to draw not only in 'pixel by pixel' mode.
+        this.states = {
+            mouseDown: false
+        };
+
         this.events = [
             {
                 selector: this.constants.css.selectors.canvasMain,
                 event: 'mousedown',
                 listener: event => {
                     this.$log.debug('mousedown');
-                    this.setPixel({
-                        inLed: _self.mousePosition.LEDIndex,
-                        inArray: _self.mousePosition.position
+                    var _self = this;
+                    $timeout(function() {
+                        "use strict";
+                        _self.states.mouseDown = true;
+
+                        _self.setPixel({
+                            inLed: _self.mousePosition.LEDIndex,
+                            inArray: _self.mousePosition.position,
+                            real: _self.mousePosition.real
+                        });
                     });
+
                 }
             },
             {
@@ -114,16 +130,22 @@ class DrawerController {
                 event: 'mouseup',
                 listener: event => {
                     this.$log.debug('mouseup');
+                    this.states.mouseDown = false;
                 }
             },
             {
                 selector: this.constants.css.selectors.canvasMain,
                 event: 'mouseleave',
                 listener: event => {
-                    this.$log.debug('mouseleave');
+
+                    // TODO I'm still not sure if it should work like that...
+
+                    /*this.$log.debug('mouseleave');
+                    this.states.mouseDown = false;
+
                     $timeout(function() {
                         _self.mousePosition = {};
-                    });
+                    });*/
                 }
             },
             {
@@ -133,7 +155,6 @@ class DrawerController {
                     var cells = Math.round(this.constants.drawer.width / this.constants.drawer.led.width);
                     var rows = Math.round(this.constants.drawer.height / this.constants.drawer.led.height);
 
-                    // FIXME layerX and layerY are buggy on the Internet Explorer!!!
                     var parcelX = Math.ceil(event.layerX / this.constants.drawer.led.width) || 1;
                     var parcelY = Math.ceil(event.layerY / this.constants.drawer.led.height) || 1;
 
@@ -153,18 +174,30 @@ class DrawerController {
                         parcelX = parcelX + prevLast - 1;
                     }
 
-                    this.$log.info('LED Index: %d, Position: %d', parcelX, position);
+                    var _mousePosition = {
+                        real: {
+                            cell: _parcelX,
+                            row: _parcelY
+                        },
+                        LEDIndex: parcelX,
+                        position: position
+                    };
 
-                    $timeout(function() {
-                        _self.mousePosition = {
-                            real: {
-                                cell: _parcelX,
-                                row: _parcelY
-                            },
-                            LEDIndex: parcelX,
-                            position: position
-                        };
-                    });
+
+                    if(!_.isEqual(_self.mousePosition, _mousePosition)) {
+                        $timeout(function () {
+                            _self.$log.info('LED Index: %d, Position: %d', parcelX, position);
+                            _self.mousePosition = _mousePosition;
+
+                            if(_self.states.mouseDown) {
+                                _self.setPixel({
+                                    inLed: _self.mousePosition.LEDIndex,
+                                    inArray: _self.mousePosition.position,
+                                    real: _self.mousePosition.real
+                                });
+                            }
+                        });
+                    }
                 }
             }
         ];
@@ -172,20 +205,32 @@ class DrawerController {
         this.$rootScope.$on(this.Broadcast.frame.new, function() {
             _self.$log.info('New frame.');
         });
+
+        this.$scope.$watch(this.Collector.selected, function() {
+            console.log('a');
+        }, true);
     }
 
-    setCanvas(canvas) {
+    setCanvas(drawLayer, background) {
 
         this.$log.info('Setting up canvas...');
 
-        this.canvas.background = canvas;
-        this.canvas.context = canvas.getContext('2d');
+        this.canvas.layer = drawLayer;
+        this.canvas.layer.context = drawLayer.getContext('2d');
+
+        this.canvas.background = background;
+        this.canvas.background.context = background.getContext('2d')
 
         /**
          * Set canvas to be equal to the drawer holder width and height.
          */
+        this.canvas.layer.setAttribute('width', this.constants.drawer.width);
+        this.canvas.layer.setAttribute('height', this.constants.drawer.height);
+
         this.canvas.background.setAttribute('width', this.constants.drawer.width);
         this.canvas.background.setAttribute('height', this.constants.drawer.height);
+
+        this.drawBackground();
 
     }
 
@@ -196,7 +241,7 @@ class DrawerController {
             this._coordinates = [];
         }
 
-        this.drawPixels();
+        this.drawPixel();
     }
 
     setPixel(position) {
@@ -225,27 +270,15 @@ class DrawerController {
             this._pixels.length = 0;
         }
         this._pixels = this.pixels = inLedStrip;
-        this.drawPixels(pixels);
+        this.drawPixel(position);
     }
 
     loadShape() {
         this.$log.info('Drawing the basic shape...');
-        this.drawPixels([0,40,80,39,79,119,78,77,117,157,197,237,238,239,199,159,1,2,42,82,81]);
+        this.drawPixel([0,40,80,39,79,119,78,77,117,157,197,237,238,239,199,159,1,2,42,82,81]);
     }
 
-    drawPixels(coordinates) {
-        coordinates = coordinates || [];
-
-        if(this.Collector.frames.length > 0) {
-            this.Collector.frames[this.Collector.selected].setLEDArray(coordinates);
-        }
-
-        this.$log.info('Drawing pixels... [coordinates: %O]', coordinates);
-
-        if(!coordinates instanceof Array) {
-            throw new TypeError('Coordinates should be in Array format.');
-        }
-
+    drawBackground() {
         var top = 0;
         var left = 0;
 
@@ -257,19 +290,15 @@ class DrawerController {
         for(var a = 0; a < rows; a++) {
             for(var i = 0; i < cells; i++) {
                 let index = (i % 2);
+                this.canvas.background.context.fillStyle = this.constants.drawer.led.color.empty;
+                this.canvas.background.context.rect(left, top, this.constants.drawer.led.width, this.constants.drawer.led.height);
+                this.canvas.background.context.lineWidth = 1;
+                this.canvas.background.context.strokeStyle = this.constants.drawer.led.color.stroke;
+                this.canvas.background.context.fill();
+                this.canvas.background.context.stroke();
 
-                // TODO Optimize the way how the pixels are drawing.
-                //if(coordinates.indexOf(block) >= 0) {
-                    this.canvas.context.fillStyle = coordinates.indexOf(block) >= 0 ? this.constants.drawer.led.color.active : this.constants.drawer.led.color.empty;
-                    this.canvas.context.rect(left, top, this.constants.drawer.led.width, this.constants.drawer.led.height);
-                    this.canvas.context.lineWidth = 1;
-                    this.canvas.context.strokeStyle = this.constants.drawer.led.color.stroke;
-                    this.canvas.context.fill();
-                    this.canvas.context.stroke();
-
-                    this.canvas.context.closePath();
-                    this.canvas.context.beginPath();
-                //}
+                this.canvas.background.context.closePath();
+                this.canvas.background.context.beginPath();
 
                 left += this.constants.drawer.led.width;
                 block++;
@@ -277,6 +306,39 @@ class DrawerController {
             left = 0;
             top += this.constants.drawer.led.height;
         }
+    }
+    drawPixel(coordinates, isEmpty) {
+
+        // TODO Possibility to draw in different colors (for RGB LED strips).
+
+        if(!coordinates) {
+            return;
+        }
+
+        coordinates = coordinates || [];
+        isEmpty = isEmpty || false;
+
+
+        /**
+         * Calculating real x/y position in pixels.
+         * @type {number}
+         */
+        let left = (coordinates.real.cell - 1) * this.constants.drawer.led.width;
+        let top = (coordinates.real.row - 1) * this.constants.drawer.led.height;
+
+        /**
+         * Drawing our pixel point.
+         * @type {string}
+         */
+        this.canvas.layer.context.fillStyle = this.constants.drawer.led.color.active;
+        this.canvas.layer.context.rect(left, top, this.constants.drawer.led.width, this.constants.drawer.led.height);
+        this.canvas.layer.context.lineWidth = 1;
+        this.canvas.layer.context.strokeStyle = this.constants.drawer.led.color.stroke;
+        this.canvas.layer.context.fill();
+        this.canvas.layer.context.stroke();
+
+        this.canvas.layer.context.closePath();
+        this.canvas.layer.context.beginPath();
 
     }
 

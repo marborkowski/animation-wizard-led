@@ -3,4 +3,8 @@ div.directive-drawer {
   height: 450px;
   cursor: pointer;
   padding:0;
+  position:relative;
+  canvas {
+    position:absolute;
+  }
 }
