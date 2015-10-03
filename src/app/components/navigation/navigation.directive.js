@@ -23,7 +23,7 @@ class NavigationDirective {
 }
 
 class NavigationController {
-    constructor($rootScope, $timeout, $scope, localStorageService, $log, Broadcast) {
+    constructor($rootScope, $timeout, $scope, localStorageService, $log, Broadcast, $state) {
         'ngInject';
 
         /**
@@ -35,6 +35,7 @@ class NavigationController {
         this.localStorageService = localStorageService;
         this.Broadcast = Broadcast;
         this.$log = $log;
+        this.$state = $state;
 
         this.constants = {
             _version: 1,

@@ -1,7 +1,7 @@
 <nav class="navbar navbar-default main">
   <div class="container-fluid">
     <div class="navbar-header">
-      <a class="navbar-brand" href="#">LED Animation Wizard</a>
+      <a class="navbar-brand" ui-sref="home">LED Animation Wizard</a>
     </div>
 
 
@@ -26,8 +26,8 @@
         <button type="button" class="btn btn-default">
           <i class="glyphicon glyphicon-heart"></i> Other
         </button>
-        <button type="button" class="btn btn-default">
-          <i class="glyphicon glyphicon-qrcode"></i> Option
+        <button type="button" class="btn btn-default" ng-click="navigation.$state.go('settings')">
+          <i class="glyphicon glyphicon-qrcode"></i> Settings
         </button>
       </div>
       <ul class="nav navbar-nav navbar-right">

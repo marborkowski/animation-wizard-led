@@ -1,0 +1,8 @@
+<section class="settings">
+  <ul class="nav nav-tabs nav-justified">
+    <li role="presentation" ng-class="{'active': $index === settings.tabs.selected}" ng-repeat="tab in settings.tabs.elements track by $index">
+      <a ng-click="settings.actions.changeTab(tab.route, $index)">{{tab.label}}</a>
+    </li>
+  </ul>
+  <div ui-view autoscroll="false" class="tab-content"></div>
+</section>

@@ -9,6 +9,9 @@ import runBlock from './index.run';
  * Controllers.
  */
 import MainController from './main/main.controller';
+import SettingsController from './settings/settings.controller';
+import SettingsArduinoController from './settings/settings-arduino.controller';
+import SettingsGeneraloController from './settings/settings-general.controller';
 
 /**
  * Directives.
@@ -36,4 +39,7 @@ angular.module('animationWizardLed', ['ngAnimate', 'ngSanitize', 'ngResource', '
     .factory('Broadcast',  () => new BroadcastingService())
     .factory('Collector',  () => new CollectorService())
     .run(runBlock)
-    .controller('MainController', MainController);
+    .controller('MainController', MainController)
+    .controller('SettingsController', SettingsController)
+    .controller('SettingsArduinoController', SettingsArduinoController)
+    .controller('SettingsGeneraloController', SettingsGeneraloController);
