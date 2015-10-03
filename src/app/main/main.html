@@ -1,9 +1,15 @@
 <section class="stage">
   <div class="main">
-
     <!-- drawer : starts here -->
-    <div class="panel panel-default">
-      <div class="panel-heading"><i class="glyphicon glyphicon-pencil"></i> Drawing area</div>
+    <div class="panel panel-default panel-drawing">
+      <div class="panel-heading heading-drawing">
+        <ul class="list-inline">
+          <li><i class="glyphicon glyphicon-eye-open"></i> Drawing area</li>
+          <li>
+            <button class="btn btn-default glyphicon {{tool.icon}}" ng-repeat="tool in main.tools track by $index" ng-click="main.actions.selectTool($index)" ng-class="{'btn-primary': main.Collector.tools.selectedIndex === $index}"></button>
+          </li>
+        </ul>
+      </div>
       <div class="panel-body">
         <drawer mouse-position="position" pixels="pixels" class="pull-center" canvas="canvas"></drawer>
       </div>

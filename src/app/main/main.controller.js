@@ -1,15 +1,27 @@
 class MainController {
-    constructor($timeout) {
+    constructor($timeout, Collector) {
         'ngInject';
 
-        this.awesomeThings = [];
-        this.classAnimation = '';
-        this.creationDate = 1443122854210;
-        this.toastr = toastr;
-    }
+        var main = this;
 
-    showToastr() {
-        //this.something...
+        this.Collector = Collector;
+
+        main.tools = [
+            {
+                title: 'Pen',
+                icon: 'glyphicon-pencil'
+            },
+            {
+                title: 'Eraser',
+                icon: 'glyphicon-erase'
+            }
+        ];
+
+        main.actions = {
+            selectTool: function(index) {
+                main.Collector.tools.selectedIndex = index;
+            }
+        }
     }
 }
 

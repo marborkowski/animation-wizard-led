@@ -7,15 +7,31 @@ section.stage {
     border-style: solid;
     padding: $panel-body-padding;
   }*/
+  div.panel {
+    &.panel-drawing > .heading-drawing {
+      ul {
+        &.list-inline {
+          margin: 0;
+          padding: 0;
+          button.btn:first-child {
+            margin-right: 5px;
+          }
+          button:focus {
+            outline: 0;
+          }
+        }
+      }
+    }
+  }
   div.panel-footer {
     li:nth-child(1) {
-      min-width:80px;
+      min-width: 80px;
     }
     li:nth-child(2) {
-      min-width:90px;
+      min-width: 90px;
     }
     li:nth-child(3) {
-      min-width:130px;
+      min-width: 130px;
     }
   }
 }

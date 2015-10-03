@@ -5,6 +5,7 @@ class DrawerDirective {
     constructor() {
         'ngInject';
 
+        // TODO Possibility to re-edit the previous frames..
         let postLink = function (scope, element, attr, drawer) {
 
             /**
@@ -245,13 +246,22 @@ class DrawerController {
     }
 
     setPixel(position) {
-        this._coordinates = this._coordinates || [];
-        var find =  _.findWhere(this._coordinates, position);
 
-        if(find) {
-            this._coordinates = _.without(this._coordinates, find);
-        } else {
+        this._coordinates = this._coordinates || [];
+
+        var search = {
+            inLed: position.inLed,
+            inArray: position.inArray
+        };
+
+        var find =  _.findWhere(this._coordinates, search);
+
+        if(this.Collector.tools.selectedIndex === 0) {
+            if(!find) {
             this._coordinates.push(position);
+            }
+        } else {
+            this._coordinates = _.without(this._coordinates, find);
         }
 
         var pixels = _.pluck(this._coordinates, 'inArray').sort(
@@ -333,12 +343,18 @@ class DrawerController {
          * Drawing our pixel point.
          * @type {string}
          */
-        this.canvas.layer.context.fillStyle = this.constants.drawer.led.color.active;
-        this.canvas.layer.context.rect(left, top, this.constants.drawer.led.width, this.constants.drawer.led.height);
-        this.canvas.layer.context.lineWidth = 1;
-        this.canvas.layer.context.strokeStyle = this.constants.drawer.led.color.stroke;
-        this.canvas.layer.context.fill();
-        this.canvas.layer.context.stroke();
+        console.warn('drawPixel');
+
+        if(this.Collector.tools.selectedIndex === 0) {
+            this.canvas.layer.context.fillStyle = this.constants.drawer.led.color.active;
+            this.canvas.layer.context.rect(left, top, this.constants.drawer.led.width, this.constants.drawer.led.height);
+            this.canvas.layer.context.lineWidth = 1;
+            this.canvas.layer.context.strokeStyle = this.constants.drawer.led.color.stroke;
+            this.canvas.layer.context.fill();
+            this.canvas.layer.context.stroke();
+        } else {
+            this.canvas.layer.context.clearRect(left, top, this.constants.drawer.led.width, this.constants.drawer.led.height);
+        }
 
         this.canvas.layer.context.closePath();
         this.canvas.layer.context.beginPath();
