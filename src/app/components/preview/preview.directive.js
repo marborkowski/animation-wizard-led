@@ -27,7 +27,7 @@ class PreviewDirective {
 }
 
 class PreviewController {
-    constructor($rootScope, $timeout, $scope, $log, $element, Broadcast, Collector) {
+    constructor($rootScope, $timeout, $scope, $log, $element, Broadcast, Collector, Socket) {
         'ngInject';
 
         var _self = this;
@@ -39,6 +39,7 @@ class PreviewController {
         this.$rootScope = $rootScope;
         this.Broadcast = Broadcast;
         this.Collector = Collector;
+        this.Socket = Socket;
 
         this.domElements = {};
         this.constants = {
@@ -153,7 +154,10 @@ class PreviewController {
 
             _self.$log.debug('Frame %d of %d', currentIndex + 1, frames.length);
 
-            _self.domElements.LEDArray.innerText = '[' +_self.Collector.frames[currentIndex].getLEDArray().join(', ') + ']';
+            let LEDArray = _self.Collector.frames[currentIndex].getLEDArray();
+
+            _self.domElements.LEDArray.innerText = '[' + LEDArray.join(', ') + ']';
+            _self.Socket.emit('led:matrix', LEDArray);
 
             previousIndex = currentIndex;
             currentIndex++;

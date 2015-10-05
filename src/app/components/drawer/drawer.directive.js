@@ -61,7 +61,7 @@ class DrawerDirective {
 }
 
 class DrawerController {
-    constructor($rootScope, $timeout, $scope, $log, $element, Broadcast, Collector) {
+    constructor($rootScope, $timeout, $scope, $log, $element, Broadcast, Collector, Socket) {
         'ngInject';
 
         var _self = this;
@@ -73,6 +73,7 @@ class DrawerController {
         this.$scope = $scope;
         this.Broadcast = Broadcast;
         this.Collector = Collector;
+        this.Socket = Socket;
 
         this.canvas = {
             background: {},
@@ -284,6 +285,7 @@ class DrawerController {
         this.Collector.frames[this.Collector.selected].setLEDArray(this._pixels.slice(0));
 
         this.drawPixel(position);
+        this.Socket.emit('led:matrix', this._pixels.slice(0));
     }
 
     loadShape() {

@@ -1,10 +1,13 @@
 class MainController {
-    constructor($timeout, Collector) {
+    constructor($timeout, Collector, Socket, $scope) {
         'ngInject';
 
         var main = this;
 
-        this.Collector = Collector;
+        main.Collector = Collector;
+        main.Socket = Socket;
+
+        main.Socket.emit('chat message', '123');
 
         main.tools = [
             {
@@ -21,7 +24,11 @@ class MainController {
             selectTool: function(index) {
                 main.Collector.tools.selectedIndex = index;
             }
-        }
+        };
+
+        $scope.$on('$destroy', function() {
+            // TODO Destroy socket events on exit...
+        });
     }
 }
 

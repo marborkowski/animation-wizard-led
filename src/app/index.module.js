@@ -25,6 +25,7 @@ import PreviewDirective from '../app/components/preview/preview.directive';
  * Services.
  */
 import FrameFactory from '../app/components/services/frame.factory';
+import SocketFactory from '../app/components/services/socket.service';
 import BroadcastingService from '../app/components/services/broadcasting.service';
 import CollectorService from '../app/components/services/collector.service';
 
@@ -36,6 +37,7 @@ angular.module('animationWizardLed', ['ngAnimate', 'ngSanitize', 'ngResource', '
     .directive('frames', () => new FramesDirective())
     .directive('preview', () => new PreviewDirective())
     .factory('Frame',  () => new FrameFactory)
+    .factory('Socket',  ($rootScope,$log) => new SocketFactory($rootScope, $log))
     .factory('Broadcast',  () => new BroadcastingService())
     .factory('Collector',  () => new CollectorService())
     .run(runBlock)
