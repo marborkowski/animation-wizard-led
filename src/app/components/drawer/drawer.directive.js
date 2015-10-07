@@ -142,12 +142,12 @@ class DrawerController {
 
                     // TODO I'm still not sure if it should work like that...
 
-                    /*this.$log.debug('mouseleave');
+                    this.$log.debug('mouseleave');
                     this.states.mouseDown = false;
 
                     $timeout(function() {
                         _self.mousePosition = {};
-                    });*/
+                    });
                 }
             },
             {

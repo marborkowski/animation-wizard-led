@@ -9,5 +9,3 @@
 | components\preview\preview.directive.js | 71 | Make the canvas wider and more well-fitting.
 | components\services\socket.service.js | 17 | Add method to remove all listeners.
 | components\services\socket.service.js | 18 | Clean up the code.
-| components\frames\frames.html | 6 | 
-| components\frames\frames.html | 7 | baba
