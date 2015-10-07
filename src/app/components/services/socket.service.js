@@ -15,6 +15,7 @@ export default class SocketService {
         });
 
         // TODO Add method to remove all listeners.
+        // TODO Clean up the code.
         return {
             on: function(eventName, callback) {
                 socket.on(eventName, function() {

@@ -154,7 +154,13 @@ class PreviewController {
 
             _self.$log.debug('Frame %d of %d', currentIndex + 1, frames.length);
 
-            let LEDArray = _self.Collector.frames[currentIndex].getLEDArray();
+            //let LEDArray = _self.Collector.frames[currentIndex].getLEDArray();
+
+            let LEDArray = _.pluck(_self.Collector.frames[currentIndex].getCoordinates(), 'inLed').sort(
+                function(a, b){
+                    return a - b;
+                }
+            );
 
             _self.domElements.LEDArray.innerText = '[' + LEDArray.join(', ') + ']';
             _self.Socket.emit('led:matrix', LEDArray);

@@ -9,7 +9,8 @@ export default class BroadcastingService {
 
         var broadcast = {
             frame: {
-                new: events.frame + ':new'
+                new: events.frame + ':new',
+                selected: events.frame + ':selected'
             },
             animation: {
                 play: events.animation + ':play'

@@ -208,9 +208,11 @@ class DrawerController {
             _self.$log.info('New frame.');
         });
 
-        this.$scope.$watch(this.Collector.selected, function() {
-            console.log('selected');
-        }, true);
+        this.$rootScope.$on(this.Broadcast.frame.selected, function(additional, index) {
+            _self.$log.info('Selected frame is %s', index);
+            _self.loadShape(_self.Collector.frames[index])
+        });
+
     }
 
     setCanvas(drawLayer, background) {
@@ -248,30 +250,9 @@ class DrawerController {
 
     setPixel(position) {
 
-        this._coordinates = this._coordinates || [];
+        this.Collector.frames[this.Collector.selected].setCoordinates(position, this.Collector.tools.selectedIndex);
 
-        var search = {
-            inLed: position.inLed,
-            inArray: position.inArray
-        };
-
-        var find =  _.findWhere(this._coordinates, search);
-
-        if(this.Collector.tools.selectedIndex === 0) {
-            if(!find) {
-            this._coordinates.push(position);
-            }
-        } else {
-            this._coordinates = _.without(this._coordinates, find);
-        }
-
-        var pixels = _.pluck(this._coordinates, 'inArray').sort(
-            function(a, b){
-                return a - b;
-            }
-        );
-
-        var inLedStrip = _.pluck(this._coordinates, 'inLed').sort(
+        var inLedStrip = _.pluck(this.Collector.frames[this.Collector.selected].getCoordinates(), 'inLed').sort(
             function(a, b){
                 return a - b;
             }
@@ -282,21 +263,71 @@ class DrawerController {
         }
         this._pixels = this.pixels = inLedStrip;
 
-        this.Collector.frames[this.Collector.selected].setLEDArray(this._pixels.slice(0));
-
         this.drawPixel(position);
-        this.Socket.emit('led:matrix', this._pixels.slice(0));
     }
 
-    loadShape() {
+    loadShape(frame) {
         this.$log.info('Drawing the basic shape...');
-        this.drawPixel([0,40,80,39,79,119,78,77,117,157,197,237,238,239,199,159,1,2,42,82,81]);
+
+        var _self = this;
+
+        /**
+         * Get LED array from current frame's object.
+         * @type {Array.<T>}
+         */
+        var inLedStrip = _.pluck(this.Collector.frames[this.Collector.selected].getCoordinates(), 'inLed').sort(
+            function(a, b){
+                return a - b;
+            }
+        );
+
+        /**
+         * Clear collection.
+         */
+        if(this._pixels) {
+            this._pixels.length = 0;
+        }
+
+        /**
+         * Clear stage before
+         * drawing shape.
+         */
+        _self.clearDrawer();
+
+        /**
+         * Draw shape - pixel by pixel.
+         */
+        this.Collector.frames[this.Collector.selected].getCoordinates().forEach(function(cr) {
+            _self.drawPixel(cr, false, true);
+        });
+
+
+        /**
+         * Set up new 'pixels' collection.
+         * @type {Array.<T>}
+         * @private
+         */
+        this._pixels = this.pixels = inLedStrip;
     }
 
+    /**
+     * Draw grid as a background.
+     */
     drawBackground() {
-        var top = 0;
-        var left = 0;
 
+        /**
+         * Where to start drawing.
+         * @type {{top: number, left: number}}
+         */
+        var position = {
+            top: 0,
+            left: 0
+        };
+
+        /**
+         * Calculating the count of cells & rows.
+         * @type {number}
+         */
         var cells = Math.round(this.constants.drawer.width / this.constants.drawer.led.width);
         var rows = Math.round(this.constants.drawer.height / this.constants.drawer.led.height);
 
@@ -306,7 +337,7 @@ class DrawerController {
             for(var i = 0; i < cells; i++) {
                 let index = (i % 2);
                 this.canvas.background.context.fillStyle = this.constants.drawer.led.color.empty;
-                this.canvas.background.context.rect(left, top, this.constants.drawer.led.width, this.constants.drawer.led.height);
+                this.canvas.background.context.rect(position.left, position.top, this.constants.drawer.led.width, this.constants.drawer.led.height);
                 this.canvas.background.context.lineWidth = 1;
                 this.canvas.background.context.strokeStyle = this.constants.drawer.led.color.stroke;
                 this.canvas.background.context.fill();
@@ -315,14 +346,19 @@ class DrawerController {
                 this.canvas.background.context.closePath();
                 this.canvas.background.context.beginPath();
 
-                left += this.constants.drawer.led.width;
+                position.left += this.constants.drawer.led.width;
                 block++;
             }
-            left = 0;
-            top += this.constants.drawer.led.height;
+
+            position.left = 0;
+            position.top += this.constants.drawer.led.height;
         }
     }
-    drawPixel(coordinates, isEmpty) {
+    clearDrawer() {
+        this.canvas.layer.context.clearRect(0, 0, this.canvas.layer.width, this.canvas.layer.height);
+    }
+    drawPixel(coordinates, isEmpty, skipTool) {
+
 
         // TODO Possibility to draw in different colors (for RGB LED strips).
 
@@ -330,8 +366,14 @@ class DrawerController {
             return;
         }
 
+        console.log('drawing: %O', coordinates);
+
+        // TODO performance tests
+        //this.Socket.emit('led:matrix', this._pixels);
+
         coordinates = coordinates || [];
         isEmpty = isEmpty || false;
+        skipTool = skipTool || false;
 
 
         /**
@@ -345,9 +387,8 @@ class DrawerController {
          * Drawing our pixel point.
          * @type {string}
          */
-        console.warn('drawPixel');
 
-        if(this.Collector.tools.selectedIndex === 0) {
+        if(this.Collector.tools.selectedIndex === 0 || skipTool) {
             this.canvas.layer.context.fillStyle = this.constants.drawer.led.color.active;
             this.canvas.layer.context.rect(left, top, this.constants.drawer.led.width, this.constants.drawer.led.height);
             this.canvas.layer.context.lineWidth = 1;

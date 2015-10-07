@@ -94,8 +94,15 @@ class FramesController {
 
         this.$rootScope.$broadcast(this.Broadcast.frame.new);
 
+        var frameIndex = this.Collector.frames.length - 1;
+        var prevFrameIndex = frameIndex - 1;
+
+        if(prevFrameIndex >= 0) {
+            this.Collector.frames[frameIndex].coordinates = this.Collector.frames[prevFrameIndex].coordinates.slice(0);
+        }
+
         this.applyPreview(uniqueId);
-        this.setActiveFrame(this.Collector.frames.length - 1, true);
+        this.setActiveFrame(frameIndex, true);
     }
 
     scrollToEnd() {
@@ -106,10 +113,11 @@ class FramesController {
         });
     }
     setActiveFrame(index, scroll) {
+
         scroll = scroll || false;
         
         this.$log.info('Active frame is %d', index);
-        this.Collector.selected = index;
+        this.Collector.setSelected(index);
 
         if(scroll) {
             this.scrollToEnd();
@@ -117,6 +125,7 @@ class FramesController {
     }
 
     applyPreview(frameId) {
+
         this.$log.info('Applying preview to frame %s.', this.Collector.selected);
         var _self = this;
 

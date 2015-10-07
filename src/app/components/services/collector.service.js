@@ -1,10 +1,14 @@
 export default class CollectorService {
-    constructor() {
+    constructor($rootScope, Broadcast) {
         'ngInject';
 
         var collector = {
             frames: [],
             selected: 0,
+            setSelected: function(index) {
+                collector.selected = index;
+                $rootScope.$emit(Broadcast.frame.selected, index);
+            },
             tools: {
                 types: [
                     {
