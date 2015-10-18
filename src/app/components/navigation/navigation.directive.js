@@ -71,6 +71,21 @@ class NavigationController {
             _version: this.constants._version
         };
 
+        this.actions = {
+            fullScreen: function() {
+                var element = document.querySelector('div.directive-drawer');
+                if(element.requestFullscreen) {
+                    element.requestFullscreen();
+                } else if(element.mozRequestFullScreen) {
+                    element.mozRequestFullScreen();
+                } else if(element.webkitRequestFullscreen) {
+                    element.webkitRequestFullscreen();
+                } else if(element.msRequestFullscreen) {
+                    element.msRequestFullscreen();
+                }
+            }
+        };
+
         this.watchers = [
             {
                 model: 'navigation.settings',

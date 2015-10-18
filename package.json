@@ -1,7 +1,10 @@
 {
   "name": "animationWizardLed",
   "version": "0.0.0",
-  "dependencies": {},
+  "dependencies": {
+    "karma": "^0.12.37",
+    "phantomjs": "^1.9.18"
+  },
   "scripts": {
     "test": "gulp test"
   },

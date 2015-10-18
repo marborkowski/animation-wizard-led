@@ -90,7 +90,7 @@ class DrawerController {
                     color: {
                         active: 'red',
                         empty: '#f8f8f8',
-                        stroke: '#f0f0f0'
+                        stroke: '#fff'
                     }
                 }
             },
